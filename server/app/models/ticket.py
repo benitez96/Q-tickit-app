@@ -1,6 +1,9 @@
 from typing import Optional, TYPE_CHECKING
 from sqlmodel import SQLModel, Field, Relationship
 
+#%% Tickets
+
+
 class Ticket(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -10,11 +13,6 @@ class Ticket(SQLModel, table=True):
     customer_phone: str
     customer_address: str
 
-
-    #Relationships
-    if TYPE_CHECKING:
-        from .link import Link
-        from .state import State
 
     state_id: int = Field(default=None, foreign_key='state.id')
     state: 'State' = Relationship(back_populates='tickets')

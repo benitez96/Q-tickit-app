@@ -10,10 +10,6 @@ class Link(SQLModel, table=True):
     url: str
 
 
-    # Relationships
-    if TYPE_CHECKING:
-        from .event import Event
-        from .ticket import Ticket
 
     event_id: int = Field(default=None, foreign_key='event.id')
     event: 'Event' = Relationship(back_populates='links')

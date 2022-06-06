@@ -3,17 +3,24 @@ from sqlmodel import select
 from sqlalchemy.orm import joinedload
 
 from .base import BaseRepository
-from ...models.models import *
+from ...models.organization import *
+from ...models.user import User
 
 
 class OrganizationRepository(BaseRepository):
 
     def create_organization(self, *, new_organization: OrganizationCreate) -> OrganizationRead:
 
-        import wdb; wdb.set_trace()
         organization = Organization(**new_organization.dict())
-        user = self.db.get(User, new_organization.user_id)
-        organization.users = [user]
+
+        print('organization', organization)
+        user = self.db.get(User, new_organization.created_by)
+        print('user', user)
+
+        organization.created_by = user
+        # organization.users.append(user)
+
+        print('organization', organization)
 
         self.db.add(organization)
 

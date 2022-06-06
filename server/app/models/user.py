@@ -1,10 +1,18 @@
 from typing import Optional, List, TYPE_CHECKING
 from sqlmodel import SQLModel, Field, Relationship
+from datetime import datetime
 
-if TYPE_CHECKING:
-    from .event import Event
-    from .organization_user_link import OrganizationUserLink
+from .organization_user_link import OrganizationUserLink
+from .organization import *
 
+class UserCredentials(SQLModel):
+    login: str
+    password: str
+
+class UserAuthenticated(SQLModel):
+    token: str
+    expiration: datetime
+    user_id: int
 
 class UserBase(SQLModel):
     name: str
@@ -16,18 +24,22 @@ class UserBase(SQLModel):
 class UserRead(UserBase):
     id: int
 
+class UserReadInOrganization(SQLModel):
+    id: int
+    name: str
+    is_active: bool
+    permissions: str
+
 class UserReadWithRelationships(UserRead):
 
-    pass
-    #o2m
-    # event: List['Event'] = []
-
     #m2m
-    # organizations: List['OrganizationUserLink'] = []
+    organizations: List['Organization'] = []
 
 class UserCreate(UserBase):
     password: str
 
+class UserValidation(UserCreate):
+    id: int
 
 class User(UserCreate, table=True):
     __tablename__ = 'users'
@@ -38,13 +50,15 @@ class User(UserCreate, table=True):
 
     #o2m
     events: List['Event'] = Relationship(back_populates='user')
+    organizations_created: \
+        Optional[List['Organization']] = Relationship(back_populates='created_by')
 
+
+
+    organizations: List['Organization'] = Relationship(back_populates='users',
+                                                       link_model=OrganizationUserLink)
     #m2m
-    organizations: List['OrganizationUserLink'] = Relationship(back_populates='user')
-
-
-
-
+    # organizations: List['OrganizationUserLink'] = Relationship(back_populates='user')
 
 
 class UserCommission(SQLModel):
@@ -54,5 +68,4 @@ class UserCommission(SQLModel):
 class UserIsActive(SQLModel):
     id: int
     is_active: bool
-
 

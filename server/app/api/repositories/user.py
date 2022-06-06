@@ -4,11 +4,10 @@ from sqlalchemy.orm import Session, joinedload
 from typing import List, Optional
 from passlib.context import CryptContext
 from sqlmodel import select
-from datetime import timedelta
-from datetime import datetime
+from datetime import timedelta, datetime
 
 from .base import BaseRepository
-from ...models.models import *
+from ...models.user import *
 
 from jose import JWTError, jwt
 from ...db.config import SECRET_KEY
@@ -63,17 +62,13 @@ class UserRepository(BaseRepository):
 
     def get_user(self, id: int) -> UserReadWithRelationships:
 
-        res = self.db.execute(select(User).where(User.id == id).options(
-                                        joinedload(User.organizations),
-                                        joinedload(User.events))
-                                    )
-        user = res.scalars().first()
+        user = self.db.get(Users, id)
+        print(user)
 
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
 
-        return {**user.dict(), 'events': [event.dict() for event in user.events]}
-
+        return user
 
     def get_users(self) -> List[UserRead]:
 

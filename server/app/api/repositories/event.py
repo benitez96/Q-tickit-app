@@ -2,7 +2,7 @@ from typing import List
 from sqlmodel import select
 
 from .base import BaseRepository
-from ...models.models import *
+from ...models.event import *
 
 
 class EventRepository(BaseRepository):

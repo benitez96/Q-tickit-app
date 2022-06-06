@@ -4,7 +4,7 @@ from typing import List, ForwardRef
 
 from ..repositories.event import EventRepository
 from ..dependencies.database import get_repository
-from ...models.models import *
+from ...models.event import *
 
 
 router = APIRouter()

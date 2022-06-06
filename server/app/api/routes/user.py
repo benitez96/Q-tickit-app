@@ -4,7 +4,7 @@ from typing import List, ForwardRef
 
 from ..repositories.user import UserRepository
 from ..dependencies.database import get_repository
-from ...models.models import *
+from ...models.user import *
 
 
 router = APIRouter()
@@ -42,11 +42,11 @@ def authenticate_user(
     return UserAuthenticated(token=jwt_token, expiration=expiry_date, user_id=user.id)
 
 
-@router.get("/{id}", response_model=UserReadWithRelationships)
+@router.get("/{id}", response_model=User)
 def get_user(
     id: int,
     user_repo: UserRepository = Depends(get_repository(UserRepository))
-    ) -> UserReadWithRelationships:
+    ) -> User:
 
     return user_repo.get_user(id)
 
