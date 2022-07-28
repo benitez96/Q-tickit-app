@@ -1,22 +1,18 @@
-import express, { Express, Request, Response } from 'express';
+import express from 'express';
 import dotenv from 'dotenv';
+
+
+import router from './routes'
+import config from './configs';
 
 dotenv.config();
 
+const app = express();
+const PORT = process.env.PORT;
 
-AppDataSource.initialize().then(async () => {
+config(app)
+router(app);
 
-    // console.log("Here you can setup and run express / fastify / any other framework.")
-
-}).catch(error => console.log(error))
-
-const app: Express = express();
-const port = process.env.PORT;
-
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server');
-});
-
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
 });
